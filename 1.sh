@@ -1,0 +1,1 @@
+g++ test.cpp -o test -L/root/gedlib/lib -lgxlgedlib

@@ -264,7 +264,7 @@ int main(int argc, char* argv[]) {
 	if (argc > 1) {
 		letter_class = std::string(argv[1]);
 	}
-	std::string collection_file("../collections/Letter_" + letter_class + ".xml");
+	std::string collection_file("../collections/Letter_A.xml");
 	std::string graph_dir("../../data/datasets/Letter/HIGH/");
 
 	/* Load the GXL graphs into the environment.
@@ -338,11 +338,15 @@ int main(int argc, char* argv[]) {
 	std::vector<double> sums_of_distances({std::numeric_limits<double>::infinity()});
 	ged::ProgressBar progress(graph_ids.size());
 	std::cout << "\rComputing set median: " << progress << std::flush;
+	double time = 0;
+	double totalGED = 0;
 	for (auto g_id : graph_ids) {
 		double sum_dists{0};
 		for (auto h_id : graph_ids) {
 			env.run_method(g_id, h_id);
 			sum_dists += env.get_upper_bound(g_id, h_id);
+			totalGED += env.get_upper_bound(g_id, h_id);
+			time += env.get_runtime(g_id, h_id);
 		}
 		if (sum_dists < sums_of_distances.at(0)) {
 			sums_of_distances[0] = sum_dists;
@@ -351,7 +355,9 @@ int main(int argc, char* argv[]) {
 		progress.increment();
 		std::cout << "\rComputing set median: " << progress << std::flush;
 	}
-	std::cout << "\n";
+	std::cout << "\nTotal compute time: " << time << "\n";
+	std::cout << "Average GED upper bound: " << totalGED / (graph_ids.size() * graph_ids.size()) << "\n";
+	std::cout << "Average compute time: " << time / (graph_ids.size() * graph_ids.size()) << "\n";
 
 	/* Get the node maps from the set median to all other graphs.
 	 */
@@ -371,10 +377,10 @@ int main(int argc, char* argv[]) {
 
 	/* Save the set median as GXL file and as TikZ file.
 	 */
-	std::string gxl_file_name("../output/set_median_Letter_HIGH_" + letter_class + ".gxl");
-	save_letter_graph_as_gxl_file(median, gxl_file_name);
-	std::string tikz_file_name("../output/set_median_Letter_HIGH_" + letter_class + ".tex");
-	save_letter_graph_as_tikz_file(median, tikz_file_name);
+	//std::string gxl_file_name("../output/set_median_Letter_HIGH_" + letter_class + ".gxl");
+	//save_letter_graph_as_gxl_file(median, gxl_file_name);
+	//std::string tikz_file_name("../output/set_median_Letter_HIGH_" + letter_class + ".tex");
+	//save_letter_graph_as_tikz_file(median, tikz_file_name);
 
 
 	/* Main while loop.
@@ -440,10 +446,9 @@ int main(int argc, char* argv[]) {
 
 	/* Save the obtained solution as GXL file and as TikZ file.
 	 */
-	gxl_file_name = "../output/gen_median_Letter_HIGH_" + letter_class + ".gxl";
-	save_letter_graph_as_gxl_file(median, gxl_file_name);
-	tikz_file_name = "../output/gen_median_Letter_HIGH_" + letter_class + ".tex";
-	save_letter_graph_as_tikz_file(median, tikz_file_name);
+	//gxl_file_name = "../output/gen_median_Letter_HIGH_" + letter_class + ".gxl";
+	//save_letter_graph_as_gxl_file(median, gxl_file_name);
+	//tikz_file_name = "../output/gen_median_Letter_HIGH_" + letter_class + ".tex";
+	//save_letter_graph_as_tikz_file(median, tikz_file_name);
 
 }
-
